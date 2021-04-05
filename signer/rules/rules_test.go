@@ -22,29 +22,29 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/internal/ethapi"
-	"github.com/ethereum/go-ethereum/signer/core"
-	"github.com/ethereum/go-ethereum/signer/storage"
+	"github.com/cymerrad/go-ethereum/accounts"
+	"github.com/cymerrad/go-ethereum/common"
+	"github.com/cymerrad/go-ethereum/common/hexutil"
+	"github.com/cymerrad/go-ethereum/core/types"
+	"github.com/cymerrad/go-ethereum/internal/ethapi"
+	"github.com/cymerrad/go-ethereum/signer/core"
+	"github.com/cymerrad/go-ethereum/signer/storage"
 )
 
 const JS = `
 /**
-This is an example implementation of a Javascript rule file. 
+This is an example implementation of a Javascript rule file.
 
-When the signer receives a request over the external API, the corresponding method is evaluated. 
-Three things can happen: 
+When the signer receives a request over the external API, the corresponding method is evaluated.
+Three things can happen:
 
-1. The method returns "Approve". This means the operation is permitted. 
-2. The method returns "Reject". This means the operation is rejected. 
+1. The method returns "Approve". This means the operation is permitted.
+2. The method returns "Reject". This means the operation is rejected.
 3. Anything else; other return values [*], method not implemented or exception occurred during processing. This means
-that the operation will continue to manual processing, via the regular UI method chosen by the user. 
+that the operation will continue to manual processing, via the regular UI method chosen by the user.
 
-[*] Note: Future version of the ruleset may use more complex json-based returnvalues, making it possible to not 
-only respond Approve/Reject/Manual, but also modify responses. For example, choose to list only one, but not all 
+[*] Note: Future version of the ruleset may use more complex json-based returnvalues, making it possible to not
+only respond Approve/Reject/Manual, but also modify responses. For example, choose to list only one, but not all
 accounts in a list-request. The points above will continue to hold for non-json based responses ("Approve"/"Reject").
 
 **/
@@ -308,22 +308,22 @@ func TestStorage(t *testing.T) {
 	function testStorage(){
 		storage.Put("mykey", "myvalue")
 		a = storage.Get("mykey")
-		
+
 		storage.Put("mykey", ["a", "list"])  	// Should result in "a,list"
 		a += storage.Get("mykey")
 
-		
+
 		storage.Put("mykey", {"an": "object"}) 	// Should result in "[object Object]"
 		a += storage.Get("mykey")
 
-		
+
 		storage.Put("mykey", JSON.stringify({"an": "object"})) // Should result in '{"an":"object"}'
 		a += storage.Get("mykey")
 
 		a += storage.Get("missingkey")		//Missing keys should result in empty string
 		storage.Put("","missing key==noop") // Can't store with 0-length key
 		a += storage.Get("")				// Should result in ''
-		
+
 		var b = new BigNumber(2)
 		var c = new BigNumber(16)//"0xf0",16)
 		var d = b.plus(c)
@@ -361,7 +361,7 @@ const ExampleTxWindow = `
 		if(str.slice(0,2) == "0x"){ return new BigNumber(str.slice(2),16)}
 		return new BigNumber(str)
 	}
-	
+
 	// Time window: 1 week
 	var window = 1000* 3600*24*7;
 
@@ -370,7 +370,7 @@ const ExampleTxWindow = `
 
 	function isLimitOk(transaction){
 		var value = big(transaction.value)
-		// Start of our window function		
+		// Start of our window function
 		var windowstart = new Date().getTime() - window;
 
 		var txs = [];
@@ -382,17 +382,17 @@ const ExampleTxWindow = `
 		// First, remove all that have passed out of the time-window
 		var newtxs = txs.filter(function(tx){return tx.tstamp > windowstart});
 		console.log(txs, newtxs.length);
-	
+
 		// Secondly, aggregate the current sum
 		sum = new BigNumber(0)
 
 		sum = newtxs.reduce(function(agg, tx){ return big(tx.value).plus(agg)}, sum);
 		console.log("ApproveTx > Sum so far", sum);
 		console.log("ApproveTx > Requested", value.toNumber());
-		
+
 		// Would we exceed weekly limit ?
 		return sum.plus(value).lt(limit)
-		
+
 	}
 	function ApproveTx(r){
 		console.log(r)
@@ -405,14 +405,14 @@ const ExampleTxWindow = `
 
 	/**
 	* OnApprovedTx(str) is called when a transaction has been approved and signed. The parameter
- 	* 'response_str' contains the return value that will be sent to the external caller. 
-	* The return value from this method is ignore - the reason for having this callback is to allow the 
-	* ruleset to keep track of approved transactions. 
+ 	* 'response_str' contains the return value that will be sent to the external caller.
+	* The return value from this method is ignore - the reason for having this callback is to allow the
+	* ruleset to keep track of approved transactions.
 	*
-	* When implementing rate-limited rules, this callback should be used. 
+	* When implementing rate-limited rules, this callback should be used.
 	* If a rule responds with neither 'Approve' nor 'Reject' - the tx goes to manual processing. If the user
 	* then accepts the transaction, this method will be called.
-	* 
+	*
 	* TLDR; Use this method to keep track of signed transactions, instead of using the data in ApproveTx.
 	*/
  	function OnApprovedTx(resp){

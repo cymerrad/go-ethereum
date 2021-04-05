@@ -26,10 +26,10 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/cmd/internal/browser"
-	"github.com/ethereum/go-ethereum/params"
+	"github.com/cymerrad/go-ethereum/cmd/internal/browser"
+	"github.com/cymerrad/go-ethereum/params"
 
-	"github.com/ethereum/go-ethereum/cmd/utils"
+	"github.com/cymerrad/go-ethereum/cmd/utils"
 	cli "gopkg.in/urfave/cli.v1"
 )
 
