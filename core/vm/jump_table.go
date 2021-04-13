@@ -148,7 +148,7 @@ func NewFrontierInstructionSet() [256]operation {
 			valid:         true,
 		},
 		ADD: {
-			execute:       opAdd,
+			execute:       opAddSafe,
 			gasCost:       constGasFunc(GasFastestStep),
 			validateStack: makeStackFunc(2, 1),
 			valid:         true,
@@ -160,7 +160,7 @@ func NewFrontierInstructionSet() [256]operation {
 			valid:         true,
 		},
 		SUB: {
-			execute:       opSub,
+			execute:       opSubSafe,
 			gasCost:       constGasFunc(GasFastestStep),
 			validateStack: makeStackFunc(2, 1),
 			valid:         true,
